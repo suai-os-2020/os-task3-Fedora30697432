@@ -342,7 +342,7 @@ DWORD WINAPI Thread_i(LPVOID lpParam)
         ReleaseMutex(mut);
         computation();
     }
-    ReleaseSemaphore(sem[8], 1, NULL);
+    ReleaseSemaphore(sem[8], 2, NULL);
     return TRUE;
 }
 
@@ -353,7 +353,15 @@ DWORD WINAPI Thread_k(LPVOID lpParam)
     WaitForSingleObject(sem[7], INFINITE);
     WaitForSingleObject(sem[9], INFINITE);
     mut = OpenMutex(SYNCHRONIZE, false, (LPCSTR)"Mutex");
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 3; i++)
+    {
+        WaitForSingleObject(mut, INFINITE);
+        std::cout<<'k';
+        ReleaseMutex(mut);
+        computation();
+    }
+    WaitForSingleObject(sem[8], INFINITE);
+    for (int i = 0; i < 3; i++)
     {
         WaitForSingleObject(mut, INFINITE);
         std::cout<<'k';
